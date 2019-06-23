@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Iniciar Sesión</title>
+    <meta name="google-signin-client_id" content="1028312886907-9807l3ilvajjspj78r98eiivfr94ih02.apps.googleusercontent.com">
+</head>
+<body>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <a href="#" onclick="signOut();">Cerrar Sesión</a>
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>  
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            // Obtiene token id del usuario autenticado
+            var id_token = googleUser.getAuthResponse().id_token;
+            // Envía el token
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/google', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                console.log('Has iniciado sesión como: ' + xhr.responseText);
+            };
+            xhr.send('idtoken=' + id_token);
+        }
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('Ha cerrado la sesión.');
+            });
+        }
+    </script>
+</body>
+</html>

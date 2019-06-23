@@ -1,6 +1,7 @@
 // Importación Módulos
 require('./config/config');
 const express           = require('express'),
+      path              = require('path'),
       bodyParser        = require('body-parser'),
       mongoose          = require('mongoose');
 // Instanciacion
@@ -12,6 +13,9 @@ app.use(bodyParser.json());
 
 // Configuración global de rutas
 app.use(require('./routes/index'));
+
+// Habilita la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 // Conexión con DB
 mongoose.connect(process.env.URLDB, {useNewUrlParser: true, useCreateIndex: true},(err) => {
