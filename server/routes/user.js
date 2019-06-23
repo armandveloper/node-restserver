@@ -7,9 +7,10 @@ const express               = require('express'),
       User                  = require('../models/user');
 
 const app = express();
+const {checkToken, checkRole} = require('../middlewares/authentication');
 
 // Resolución peticiones
-app.get('/usuario', (req, res) => {
+app.get('/usuario', checkToken, (req, res) => {
     let start = Number(req.query.start) || 0,
         limit = Number(req.query.limit) || 5;
         // Busca en una colección (tabla) según un criterio
@@ -25,7 +26,7 @@ app.get('/usuario', (req, res) => {
                 });
             }
             // Devuelve el número de documentos (filas en SQL)
-            User.count({state: true}, (err, total) => {
+            User.countDocuments({state: true}, (err, total) => {
                 if (err) throw new Error('Ha surgido el error', err)
                 res.json({
                     ok: true,
@@ -35,7 +36,7 @@ app.get('/usuario', (req, res) => {
             });
         });
 });
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [checkToken, checkRole], (req, res) => {
     const person = req.body;
     // Crea nueva instancia del modelo (objeto) de usuario y asigna valores
     let user = new User({
@@ -59,7 +60,7 @@ app.post('/usuario', (req, res) => {
         });
     });
 });
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [checkToken, checkRole], (req, res) => {
     let id = req.params.id;
     // Filtra valores enviados
     let person = _.pick(req.body, ['name', 'email', 'img', 'role', 'state']);
@@ -102,7 +103,7 @@ app.put('/usuario/:id', (req, res) => {
 //     });
 // });
 // Método 2: cambiando el estado a inactivo
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [checkToken, checkRole], (req, res) => {
     let {id} = req.params;
     // Solo pasa una propiedad: el estado 
     User.findByIdAndUpdate(id, {state: false}, {new: true}, (err, user) => {

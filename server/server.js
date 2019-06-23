@@ -10,12 +10,13 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(require('./routes/user'));
+// Configuración global de rutas
+app.use(require('./routes/index'));
 
 // Conexión con DB
 mongoose.connect(process.env.URLDB, {useNewUrlParser: true, useCreateIndex: true},(err) => {
     if (err) throw new Error(err)
-    console.log('Se ha establecido la conexión con la DB');
+    console.log('Se ha establecido la conexión con la DB en', process.env.URLDB);
 });
 
 
