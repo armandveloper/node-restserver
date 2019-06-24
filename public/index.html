@@ -21,6 +21,7 @@
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
             // Obtiene token id del usuario autenticado
             var id_token = googleUser.getAuthResponse().id_token;
+            console.log(id_token);
             // Envía el token
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/google', true);
