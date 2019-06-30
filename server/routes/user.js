@@ -27,7 +27,7 @@ app.get('/usuario', checkToken, (req, res) => {
             }
             // Devuelve el número de documentos (filas en SQL)
             User.countDocuments({state: true}, (err, total) => {
-                if (err) throw new Error('Ha surgido el error', err)
+                if (err) throw new Error('Ha surgido un error', err)
                 res.json({
                     ok: true,
                     total,
