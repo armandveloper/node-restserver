@@ -15,6 +15,20 @@ const checkToken = (req, res, next) => {
     });
     
 };
+const checkTokenImg = (req, res, next) => {
+    // Verifica token para las imágenes
+    const token = req.query.token;
+    jwt.verify(token, process.env.SEED, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err
+            });
+        }
+        req.user = decoded.user;
+        next();
+    });
+};
 const checkRole = (req, res, next) => {
     // Comprueba que el usuario se admin para poder realizar acciones
     if (! (req.user.role === 'ADMIN_ROLE')) {
@@ -29,5 +43,6 @@ const checkRole = (req, res, next) => {
 };
 module.exports = {
     checkToken,
+    checkTokenImg,
     checkRole
 };
